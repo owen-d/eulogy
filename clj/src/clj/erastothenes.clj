@@ -14,14 +14,20 @@
                                         ; as it's a valid prime.
 		([] x)))
 
+(defn test-prime
+  [cur, sieve]
+  (reduce #(let [current (%2 %1)]
+             (or current (reduced current))) cur sieve))
+
 (defn recursive-primes
-	[upperbound pipe value]
+	[upperbound cur sieve]
 	(cond
                                         ; we're done: return all of the gates
-		(> value upperbound) (map #(%) pipe)
-                                        ;
-		(boolean (reduce #(%2 %1) value pipe)) (recursive-primes upperbound (conj pipe (modu-limit value)) (+ value 1))
-		:else (recur upperbound pipe (+ value 1))))
+		(> cur upperbound) (map #(%) sieve)
+                                        ; Check if it makes it through the sieve
+		(boolean (test-prime cur sieve)) (recursive-primes upperbound (conj sieve (modu-limit cur)) (+ cur 1))
+    ; not a prime, check next
+		:else (recur upperbound sieve (+ cur 1))))
 
 (defn build-primes
   "easy prime instantiation"
@@ -31,3 +37,24 @@
   ([upperbound]
    (recursive-primes upperbound [] 2)
    ))
+
+
+
+; i need a function which returns the next prime in addition to the sieve created.
+(defn lazy-primes
+  "generate prime sequences lazily"
+  ([]
+   (lazy-primes [2 []]))
+  ([[last-prime sieve]]
+   (iterate (fn workpls
+              [[cur sieve]]
+              (if
+                  ;is a prime
+                  (boolean (test-prime cur sieve)) [cur (conj sieve (modu-limit cur))]
+                  ;not a prime, find the next
+                  (#(if (test-prime %1 %2) %1 (recur (inc %1) %2)) (inc cur) sieve)))
+            [last-prime sieve])))
+
+(lazy-primes)
+
+
