@@ -59,12 +59,17 @@
         (iterate recursive-next-prime
                  [cur sieve]))))
 
-;(defn frontload-primes
-;  [lim]
-;  (let [possibilities (take (- lim 3) (iterate inc 3))
-;        init 2]
-;    ()
-;    ))
+(defn frontload-primes
+  [lim]
+  (let [potentials (take (- lim 2) (iterate inc 2))]
+    (loop [possibilities potentials prev-primes []]
+       (if (empty? possibilities)
+         ;no more #s in list, return!
+         prev-primes
+         (let [next-prime (first possibilities)]
+           (recur (filter #(not= (mod % next-prime) 0)
+                          possibilities)
+                  (conj prev-primes (first possibilities))))))))
 
 (defn sum-primes-under-lim
   ([]
