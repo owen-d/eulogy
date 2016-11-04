@@ -1,19 +1,15 @@
 (ns clj.10)
-(require '[clj.erastothenes :as erastothenes :refer [build-primes]])
+(require '[clj.erastothenes :as erastothenes :refer [lazy-primes]])
 
-; sum fn
-(defn sum
-  ; assuming its a sequence
-  ([[a & rest]]
-   (apply sum (cons a rest)))
-  ([init & args]
-   (reduce + init args)))
 
-(take-while
- (#(< % 2000000))
- (build-primes 2000000))
+(defn sum-primes-under-lim
+  ([]
+   (sum-primes-under-lim 1000))
+  ([lim]
+   (reduce + 
+           (take-while #(< % lim) (lazy-primes)))))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (println (sum-primes-under-lim 10)))

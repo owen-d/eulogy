@@ -10,7 +10,8 @@
                                         ; is not a multiple. Pass on to next in the list
            a
            ))
-                                        ; if passed no argument, we're on the final step. Return the original val this gate was made from,
+                                        ; if passed no argument, we're on the final step.
+                                        ; Return the original val this gate was made from,
                                         ; as it's a valid prime.
 		([] x)))
 
@@ -51,11 +52,23 @@
 (defn lazy-primes
   "generate prime sequences lazily"
   ([]
-   (lazy-primes [2 []]))
-  ([[last-prime sieve]]
+   ; we know 2 is the first prime, so instantiate with 2 and the gate for 2
+   (lazy-primes [2 [(modu-limit 2)]]))
+  ([[cur sieve]]
    (map #(first %)
         (iterate recursive-next-prime
-                 [last-prime sieve]))))
+                 [cur sieve]))))
 
+;(defn frontload-primes
+;  [lim]
+;  (let [possibilities (take (- lim 3) (iterate inc 3))
+;        init 2]
+;    ()
+;    ))
 
-
+(defn sum-primes-under-lim
+  ([]
+   (sum-primes-under-lim 2000000))
+  ([lim]
+   (reduce +
+           (take-while #(< % lim) (lazy-primes)))))
