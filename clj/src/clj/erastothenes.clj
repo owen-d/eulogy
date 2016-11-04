@@ -39,6 +39,13 @@
    ))
 
 
+(defn recursive-next-prime
+  [[cur sieve]]
+  (if
+      ;is a prime
+      (boolean (test-prime cur sieve)) [cur (conj sieve (modu-limit cur))]
+      ;not a prime, find the next
+      (recur [(inc cur) sieve])))
 
 ; i need a function which returns the next prime in addition to the sieve created.
 (defn lazy-primes
@@ -46,15 +53,9 @@
   ([]
    (lazy-primes [2 []]))
   ([[last-prime sieve]]
-   (iterate (fn workpls
-              [[cur sieve]]
-              (if
-                  ;is a prime
-                  (boolean (test-prime cur sieve)) [cur (conj sieve (modu-limit cur))]
-                  ;not a prime, find the next
-                  (#(if (test-prime %1 %2) %1 (recur (inc %1) %2)) (inc cur) sieve)))
-            [last-prime sieve])))
+   (map #(first %)
+        (iterate recursive-next-prime
+                 [last-prime sieve]))))
 
-(lazy-primes)
 
 
