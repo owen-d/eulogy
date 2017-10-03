@@ -4,11 +4,13 @@
   "description": "",
   "main": "even_fib.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha revStr.js"
   },
-  "author": "",
+  "author": "ls",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.16.4"
+    "chai": "^4.1.2",
+    "lodash": "^4.16.4",
+    "mocha": "^4.0.0"
   }
 }
