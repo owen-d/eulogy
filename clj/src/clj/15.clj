@@ -20,3 +20,11 @@
 
 
 (second (lattice-paths 20))
+
+
+;; NOTE:
+;; you can use the equation n choose r = n!/(r!(n-r)!)
+;; this comes from the realization that there must be 40 moves total for a 20x20 board
+;; to get from 0,0 -> 20,20
+;; These can be composed of any combinations of 20 downs and 20 rights, thus 40 choose 20:
+;; 40!/20
